@@ -14,20 +14,19 @@
   function sendSmugglingPayload() {
     // HTML Smuggling 스타일의 코드(실행은 안 하고 문자열로만 보냄)
     const smugglePayload = `
-const b64 = "VGhpcyBpcyBhIHNhZmUgZmlsZSBmb3IgSFRNTCBTbXVnZ2dsaW5nIHRlc3QuCg=="; 
+const b64 = "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=";
+// EICAR 테스트 파일
 const bytes = atob(b64);
 const arr = new Uint8Array(bytes.length);
-for (let i = 0; i < bytes.length; i++) {
-  arr[i] = bytes.charCodeAt(i);
-}
-const blob = new Blob([arr], { type: "text/plain" });
+for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+const blob = new Blob([arr], { type: "application/octet-stream" });
 const a = document.createElement("a");
 a.href = URL.createObjectURL(blob);
-a.download = "safe_payload.txt";
+a.download = "eicar.com";
 a.click();
 `;
 
-    fetch("/.netlify/functions/receive", {
+    fetch("https://sectestpage123.netlify.app/.netlify/functions/receive", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -38,7 +37,7 @@ a.click();
       .then(r => r.text())
       .then(text => {
         console.log("Function response:", text);
-        alert("POST 전송 완료 (콘솔과 Netlify Functions 로그에서 payload 확인 가능)");
+        alert("POST 전송 완료");
       })
       .catch(err => {
         console.error("Error:", err);
@@ -48,3 +47,4 @@ a.click();
   </script>
 </body>
 </html>
+
