@@ -19,7 +19,7 @@ function sendSmugglePayload() {
   a.href = URL.createObjectURL(blob);
   a.download = "safe_payload.txt";
   a.click();
-</script>`;
+</script>;
 
   fetch("/.netlify/functions/receive", {
     method: "POST",
@@ -36,3 +36,4 @@ function sendSmugglePayload() {
 </script>
 </body>
 </html>
+
