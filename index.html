@@ -1,39 +1,50 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="UTF-8">
+  <title>POST + HTML Smuggling Payload 테스트</title>
+</head>
 <body>
-<h2>POST + HTML Smuggling Payload 테스트</h2>
-<button onclick="sendSmugglePayload()">Send Smuggling Payload</button>
+  <h2>POST + HTML Smuggling Payload 테스트</h2>
+  <p>버튼을 누르면 HTML Smuggling 형태의 코드 조각을 POST Body에 담아서 Netlify Functions로 전송합니다.</p>
 
-<script>
-function sendSmugglePayload() {
-  // === HTML Smuggling 악성코드 예시(안전한 버전) ===
-  // Blob + Base64 + 자동 다운로드
-  const smugglePayload = `
-<script>
-  const b64 = "VGhpcyBpcyBhIHNhZmUgZmlsZSBmb3IgSFRNTCBTbXVnZ2xpbmcgdGVzdC4K"; 
-  const bytes = atob(b64);
-  const arr = new Uint8Array(bytes.length);
-  for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
-  const blob = new Blob([arr], {type: "text/plain"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "safe_payload.txt";
-  a.click();
-</script>;
+  <button onclick="sendSmugglingPayload()">Send Smuggling Payload</button>
 
-  fetch("/.netlify/functions/receive", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      type: "html-smuggling-test",
-      payload: smugglePayload
-    })
-  })
-    .then(r => r.text())
-    .then(console.log)
-    .catch(console.error);
+  <script>
+  function sendSmugglingPayload() {
+    // HTML Smuggling 스타일의 코드(실행은 안 하고 문자열로만 보냄)
+    const smugglePayload = `
+const b64 = "VGhpcyBpcyBhIHNhZmUgZmlsZSBmb3IgSFRNTCBTbXVnZ2dsaW5nIHRlc3QuCg=="; 
+const bytes = atob(b64);
+const arr = new Uint8Array(bytes.length);
+for (let i = 0; i < bytes.length; i++) {
+  arr[i] = bytes.charCodeAt(i);
 }
-</script>
+const blob = new Blob([arr], { type: "text/plain" });
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "safe_payload.txt";
+a.click();
+`;
+
+    fetch("/.netlify/functions/receive", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "html-smuggling-test",
+        payload: smugglePayload
+      })
+    })
+      .then(r => r.text())
+      .then(text => {
+        console.log("Function response:", text);
+        alert("POST 전송 완료 (콘솔과 Netlify Functions 로그에서 payload 확인 가능)");
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("POST 에러: " + err);
+      });
+  }
+  </script>
 </body>
 </html>
-
