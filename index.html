@@ -14,7 +14,8 @@
   function sendSmugglingPayload() {
     // HTML Smuggling 스타일의 코드(실행은 안 하고 문자열로만 보냄)
     const smugglePayload = `
-const b64 = "WDVPIVAlQEFQWzRcUFpYNTQoUF4pN0NDKTd9JEVJQ0FSLVNUQU5EQVJELUFOVElWSVJVUy1URVNULUZJTEUhJEgrSCo=";
+const b64 = "TVqQAAMAAAAEAAAA//8AALgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAA6AAAAA4fug4AtAnNIbgBTM0hVGNpcBwcm9ncmFtIGNhbm5vdCBiZSBydw4g=";
 // EICAR 테스트 파일
 const bytes = atob(b64);
 const arr = new Uint8Array(bytes.length);
@@ -47,4 +48,5 @@ a.click();
   </script>
 </body>
 </html>
+
 
